@@ -52,10 +52,11 @@ def commit_banco(query):
 @app.route('/relatorios', methods=['GET'])
 def get_relatorio():
     table = []
-    date_begin = datetime.strptime(str(request.args.get('data_inicio')), "%Y-%m-%d").date()
-    date_end = datetime.strptime(str(request.args.get('data_fim')), "%Y-%m-%d").date() + timedelta(days=1)
+    print()
+    date_begin = datetime.strptime(str(request.json['data_inicio']), "%Y-%m-%d").date()
+    date_end = datetime.strptime(str(request.json['data_fim']), "%Y-%m-%d").date() + timedelta(days=1)
 
-    tipo_rel = request.args.get('tipo_rel')
+    tipo_rel = request.json['tipo_rel']
 
     if tipo_rel == '0':
         count = (date_end - date_begin).days
@@ -164,7 +165,7 @@ def get_relatorio():
 # Método que gera uma nova senha com base na quantidade de senhas existentes no banco de dados
 @app.route('/gerar_senha', methods=['POST'])
 def gerar_senha():
-    tipo_senha = request.args.get('tipo_senha')
+    tipo_senha = request.json['tipo_senha']
     senhas = {'0': 'SP',
               '1': 'SG',
               '2': 'SE'}
