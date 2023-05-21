@@ -241,7 +241,8 @@ def chamar_senha():
                                       f"'{date_begin.date()}' AND '{date_end}' ORDER BY ticket_id ASC")
 
     if len(results) > 0:
-        dic = {columns[1]: results[0][1]}
+        dic = {columns[1]: results[0][1],
+               'Guichê': guiche}
         table.append(dic)
         ajuste = random.choice(dp_sp)
         tm_sp = tm_sp + ajuste
@@ -254,7 +255,8 @@ def chamar_senha():
                                           f"'{date_begin.date()}' AND '{date_end}' ORDER BY ticket_id ASC")
 
         if len(results) > 0:
-            dic = {columns[1]: results[0][1]}
+            dic = {columns[1]: results[0][1],
+                   'Guichê': guiche}
             table.append(dic)
             ajuste = random.choice(tm_se)
             date_new = results[0][2] + timedelta(minutes=ajuste)
@@ -265,7 +267,8 @@ def chamar_senha():
                                               "ticket_type='SG' AND called_at IS NULL AND issued_at BETWEEN "
                                               f"'{date_begin.date()}' AND '{date_end}' ORDER BY ticket_id ASC")
             if len(results) > 0:
-                dic = {columns[1]: results[0][1]}
+                dic = {columns[1]: results[0][1],
+                       'Guichê': guiche}
                 table.append(dic)
                 ajuste = random.choice(dp_sg)
                 tm_sg = tm_sg + ajuste
