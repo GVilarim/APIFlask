@@ -279,4 +279,6 @@ def chamar_senha():
 
 
 if __name__ == '__main__':
-    app.run(port=6969)
+    app.run(port=6969,
+            threaded=True,
+            processes=-1)
