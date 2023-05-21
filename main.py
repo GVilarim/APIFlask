@@ -58,48 +58,49 @@ def get_relatorio():
     tipo_rel = request.args.get('tipo_rel')
 
     if tipo_rel == '0':
-        results, columns = consulta_banco(f"SELECT DATE_FORMAT(issued_at, '%Y-%m-%d') AS dia, COUNT(*) AS "
-                                          f"quantidade_emitidas, COUNT(CASE WHEN called_at IS NOT NULL THEN 1 END) AS "
-                                          f"quantidade_atendidas, ticket_type FROM Tickets WHERE issued_at BETWEEN "
-                                          f"'{date_begin}' AND '{date_end}' GROUP BY "
-                                          f"DATE_FORMAT(issued_at, '%Y-%m-%d'), ticket_type")
-        print(results)
+        count = (date_end - date_begin).days
 
-        dic = {
-            'date': '',
-            'sg_emitidas': 0,
-            'sp_emitidas': 0,
-            'se_emitidas': 0,
-            'sg_atendidas': 0,
-            'sp_atendidas': 0,
-            'se_atendidas': 0,
-            'senhas_totais': 0,
-            'senhas_atendidas': 0
-        }
+        for c in range(count):
+            day = date_begin + timedelta(days=c)
+            day_end = date_begin + timedelta(days=c + 1)
+            results, columns = consulta_banco(f"SELECT DATE_FORMAT(issued_at, '%Y-%m-%d') AS dia, COUNT(*) AS "
+                                              f"quantidade_emitidas, COUNT(CASE WHEN called_at IS NOT NULL THEN 1 END) AS "
+                                              f"quantidade_atendidas, ticket_type FROM Tickets WHERE issued_at BETWEEN "
+                                              f"'{day}' AND '{day_end}' GROUP BY "
+                                              f"DATE_FORMAT(issued_at, '%Y-%m-%d'), ticket_type")
+            if len(results) > 0:
 
-        date_before = results[0][0]
-        for row in results:
+                dic = {
+                    'date': '',
+                    'sg_emitidas': 0,
+                    'sp_emitidas': 0,
+                    'se_emitidas': 0,
+                    'sg_atendidas': 0,
+                    'sp_atendidas': 0,
+                    'se_atendidas': 0,
+                    'senhas_totais': 0,
+                    'senhas_atendidas': 0
+                }
 
-            date = row[0]
+                for row in results:
 
-            dic['date'] = date
-            if row[3] == 'SG':
-                dic['sg_emitidas'] = row[1]
-                dic['sg_atendidas'] = row[2]
-            elif row[3] == 'SP':
-                dic['sp_emitidas'] = row[1]
-                dic['sp_atendidas'] = row[2]
-            else:
-                dic['se_emitidas'] = row[1]
-                dic['se_atendidas'] = row[2]
+                    date = row[0]
 
-            dic['senhas_totais'] = dic['senhas_totais'] + row[1]
-            dic['senhas_atendidas'] = dic['senhas_atendidas'] + row[2]
+                    dic['date'] = date
+                    if row[3] == 'SG':
+                        dic['sg_emitidas'] = row[1]
+                        dic['sg_atendidas'] = row[2]
+                    elif row[3] == 'SP':
+                        dic['sp_emitidas'] = row[1]
+                        dic['sp_atendidas'] = row[2]
+                    else:
+                        dic['se_emitidas'] = row[1]
+                        dic['se_atendidas'] = row[2]
 
-            if date != date_before or len(table) == 0:
+                    dic['senhas_totais'] = dic['senhas_totais'] + row[1]
+                    dic['senhas_atendidas'] = dic['senhas_atendidas'] + row[2]
+
                 table.append(dic)
-
-            date_before = date
 
     elif tipo_rel == '1':
         results, columns = consulta_banco(f"SELECT ticket_number AS Senha, ticket_type AS Tipo_Senha, "
