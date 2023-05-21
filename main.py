@@ -52,7 +52,6 @@ def commit_banco(query):
 @app.route('/relatorios', methods=['GET'])
 def get_relatorio():
     table = []
-    print()
     date_begin = datetime.strptime(str(request.json['data_inicio']), "%Y-%m-%d").date()
     date_end = datetime.strptime(str(request.json['data_fim']), "%Y-%m-%d").date() + timedelta(days=1)
 
@@ -172,10 +171,7 @@ def gerar_senha():
 
     date_begin = datetime.now()
     date_end = datetime.now().date() + timedelta(days=1)
-    print(senhas[tipo_senha])
-    print(type(tipo_senha))
-    print(date_begin.date())
-    print(date_end)
+
     results, columns = consulta_banco(f"SELECT ticket_number FROM Tickets WHERE issued_at BETWEEN "
                                       f"'{date_begin.date()}' AND '{date_end}' AND ticket_type = '{senhas[tipo_senha]}'"
                                       f" ORDER BY ticket_id DESC")
