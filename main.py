@@ -164,7 +164,8 @@ def get_relatorio():
 # Método que gera uma nova senha com base na quantidade de senhas existentes no banco de dados
 @app.route('/gerar_senha', methods=['POST'])
 def gerar_senha():
-    tipo_senha = request.json['tipo_senha']
+    #tipo_senha = request.json['tipo_senha']
+    tipo_senha = request.args.get('tipo_senha')
     senhas = {'0': 'SP',
               '1': 'SG',
               '2': 'SE'}
@@ -191,7 +192,8 @@ def gerar_senha():
 
     commit_banco(f"INSERT INTO Tickets (ticket_number, ticket_type, issued_at) VALUES ('{senha}', "
                  f"'{senhas[tipo_senha]}', '{date_begin}')")
-
+    print({'senha': senha,
+                    'data': date_begin})
     return jsonify({'senha': senha,
                     'data': date_begin})
 
@@ -233,8 +235,11 @@ def chamar_senha():
     tm_se = [1, 5]
 
     guiches, columns = consulta_banco("SELECT counter_id FROM Counters")
-    guiches = [row[0] for row in guiches]
-    guiche = random.choice(guiches)
+    if len(guiches) > 0:
+        guiches = [row[0] for row in guiches]
+        guiche = random.choice(guiches)
+    else:
+        guiche = 1
 
     results, columns = consulta_banco("SELECT ticket_id, ticket_number, issued_at AS senha FROM Tickets WHERE "
                                       "ticket_type='SP' AND called_at IS NULL AND issued_at BETWEEN "
@@ -284,5 +289,4 @@ def chamar_senha():
 
 if __name__ == '__main__':
     app.run(port=6969,
-            threaded=True,
-            processes=-1)
+            debug=True)
