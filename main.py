@@ -8,9 +8,9 @@ app = Flask(__name__)
 # Configuração da conexão com o banco de dados MySQL
 config = {
     'user': 'root',
-    'password': '0sLB1twIIESGeRZKS5KH',
-    'host': 'containers-us-west-65.railway.app',
-    'port': '6194',
+    'password': 'PxsustCIVjsObeVkPmLb',
+    'host': 'containers-us-west-76.railway.app',
+    'port': '5450',
     'database': 'railway',
     'raise_on_warnings': True
 }
